@@ -1,5 +1,6 @@
 import { generatedFakeField } from "./faker";
 import { IColumnType, ITableColumnType } from "./interfaces";
+import { v4 as uuidv4 } from 'uuid';
 
 export function getDataFromPage() {
   // read data from page
@@ -10,12 +11,15 @@ export function getDataFromPage() {
   const checkbox_element = id_row.querySelector(
     'input[type="checkbox"].add_id_flag'
   );
+  const checkbox_element_type = id_row.querySelector('#id_type');
+  const checkbox_element_type_value =  (checkbox_element_type as HTMLInputElement).value;
+
   const add_id_flag = (checkbox_element as HTMLInputElement).checked;
 
   const input_number_element = id_row.querySelector(
     'input[type="number"].id_starter_number'
   );
-  const id_starter_number = (input_number_element as HTMLInputElement).value;
+  const id_starter_number = input_number_element==null ? 0 : (input_number_element as HTMLInputElement).value;
 
   // read every column
   const column_data: IColumnType[] = [];
@@ -76,6 +80,7 @@ export function getDataFromPage() {
 
   return {
     add_id_flag,
+    checkbox_element_type_value,
     id_starter_number,
     column_data,
     output_row_count,
@@ -85,6 +90,7 @@ export function getDataFromPage() {
 
 export function generatedData(
   add_id_flag: boolean,
+  checkbox_element_type_value:string,
   id_starter_number: string,
   column_data: IColumnType[],
   output_row_count: string
@@ -105,7 +111,11 @@ export function generatedData(
   for (let row_index = 0; row_index < row_count; row_index++) {
     const row_data: ITableColumnType[] = [];
     if (add_id_flag) {
-      row_data.push((Number(id_starter_number) + row_index).toString());
+      if(checkbox_element_type_value==="integer"){
+        row_data.push((Number(id_starter_number) + row_index).toString());
+      }else if(checkbox_element_type_value==="uuid"){
+        row_data.push(uuidv4().toString());
+      }
     }
 
     for (let index = 0; index < column_data.length; index++) {

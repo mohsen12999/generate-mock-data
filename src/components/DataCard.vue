@@ -23,6 +23,7 @@ const generateScript = () => {
 
   const output_data = generatedData(
     input_data.add_id_flag,
+    input_data.checkbox_element_type_value,
     input_data.id_starter_number,
     input_data.column_data,
     input_data.output_row_count,
